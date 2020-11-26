@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Slf4j
+@Sql(scripts = {"classpath:db/insert-db.sql"})
 class StoreCustomerRepositoryTest {
 
     @Autowired
@@ -121,7 +123,7 @@ class StoreCustomerRepositoryTest {
     void testThatOneCustomerCanHaveMultipleAddresses(){
         storeCustomer = storeCustomerRepository.findById(2).orElse(null);
 
-        Address address = addressRepository.findById(3).orElse(null);
+        Address address = addressRepository.findById(2).orElse(null);
 
         storeCustomer.setAddress(address);
 
@@ -144,7 +146,7 @@ class StoreCustomerRepositoryTest {
             log.info("All addresses -->{}", address);
         }
         assert storeCustomer != null;
-        assertThat(storeCustomer.getAddressList().size()).isEqualTo(2);
+        assertThat(storeCustomer.getAddressList().size()).isEqualTo(1);
     }
 
     @Test

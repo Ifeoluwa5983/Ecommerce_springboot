@@ -31,7 +31,7 @@ class ProductRepositoryTest {
         void testThatWeCanCreateAProduct(){
             product.setName("Biro");
             product.setDescription("Pass your exams");
-            product.setPrice("#20");
+            product.setPrice(20.0);
             product.setQuantity(25);
             product.setExp("15-14-2025");
 
@@ -41,7 +41,7 @@ class ProductRepositoryTest {
             log.info("Product after saving --> {}", product);
         }
     @Test
-    void testThatWeCanDeleteAddress(){
+    void testThatWeCanDeleteProduct(){
         AssertionsForClassTypes.assertThat(productRepository.existsById(1)).isTrue();
         productRepository.deleteById(1);
         AssertionsForClassTypes.assertThat(productRepository.existsById(1)).isFalse();
@@ -51,7 +51,7 @@ class ProductRepositoryTest {
     void testThatWeCanUpdateAddress(){
         product = productRepository.findById(1).orElse(null);
         AssertionsForClassTypes.assertThat(product).isNotNull();
-        product.setPrice("#120");
+        product.setPrice(120.0);
         productRepository.save(product);
         AssertionsForClassTypes.assertThat(product).isNotNull();
         log.info("Product after updating --> {}", product);

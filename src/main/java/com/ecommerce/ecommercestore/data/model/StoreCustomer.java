@@ -1,6 +1,7 @@
 package com.ecommerce.ecommercestore.data.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -24,8 +25,16 @@ public class StoreCustomer {
 
     private String password;
 
+    @OneToMany(mappedBy = "storeCustomer")
+    @ToString.Exclude
+    private Set<Card> cards;
+
     @ManyToMany(cascade = CascadeType.DETACH)
+    @ToString.Exclude
     private Set<Address> addressList;
+
+    @OneToMany(mappedBy = "storeCustomer")
+    private Set<OrderModel> orderModels;
 
     public void setAddress(Address address){
         if(addressList == null){
@@ -34,6 +43,13 @@ public class StoreCustomer {
         if(checkIfAddressDoesNotExist(address)) {
             addressList.add(address);
         }
+    }
+
+    public void setCard(Card card){
+        if(cards == null){
+            cards = new HashSet<>();
+        }
+            cards.add(card);
     }
 
     private boolean checkIfAddressDoesNotExist(Address address){

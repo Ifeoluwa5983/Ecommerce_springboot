@@ -2,10 +2,7 @@ package com.ecommerce.ecommercestore.data.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -24,4 +21,13 @@ public class Card {
     private String cardName;
 
     private String exp;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    private StoreCustomer storeCustomer;
+
+    public void setStoreCustomer(StoreCustomer customer){
+        if(getStoreCustomer() == null){
+            this.storeCustomer = customer;
+        }
+    }
 }
