@@ -1,5 +1,7 @@
 package com.ecommerce.ecommercestore.data.repository;
 
+import com.ecommerce.ecommercestore.data.exception.CardException;
+import com.ecommerce.ecommercestore.data.exception.OrderException;
 import com.ecommerce.ecommercestore.data.model.Card;
 import com.ecommerce.ecommercestore.data.model.StoreCustomer;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +48,11 @@ class CardRepositoryTest {
         StoreCustomer customer = storeCustomerRepository.findById(1).orElse(null);
         card.setStoreCustomer(customer);
 
-        cardRepository.save(card);
+        assertDoesNotThrow(()-> {
+            cardRepository.saveCard(card);
+        });
 
         assertThat(customer).isNotNull();
-        assertThat(card.getId()).isNotNull();
 
         log.info("Card --> {}", card);
     }
@@ -66,6 +69,21 @@ class CardRepositoryTest {
         assertThat(card.getId()).isNotNull();
         assertThat(card.getStoreCustomer()).isNotNull();
         log.info("Card --> {}", card);
+
+    }
+    @Test
+    void testThatACardMustHaveACustomer(){
+        card.setCardType("Credit");
+        card.setCardCVV("124");
+        card.setCardNumber("123456789");
+        card.setCardName("Ifeoluwa");
+        card.setExp("12-12-2020");
+
+        assertThrows(CardException.class , ()->{
+            cardRepository.saveCard(card);
+        });
+
+        assertThat(card.getId()).isNull();
 
     }
 }

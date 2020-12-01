@@ -1,5 +1,6 @@
 package com.ecommerce.ecommercestore.data.repository;
 
+import com.ecommerce.ecommercestore.data.exception.CustomerException;
 import com.ecommerce.ecommercestore.data.model.Address;
 import com.ecommerce.ecommercestore.data.model.Product;
 import com.ecommerce.ecommercestore.data.model.StoreCustomer;
@@ -38,23 +39,36 @@ class StoreCustomerRepositoryTest {
     }
 
     @Test
-    void testThatWeCanCreateAProduct(){
+    void testThatWeCanCreateACustomer(){
         storeCustomer.setFname("Hannah");
         storeCustomer.setLname("Oluwafemi");
         storeCustomer.setContact("07098765432");
         storeCustomer.setEmail("test2@gmail.com");
         storeCustomer.setPassword("ifeoluwa1234");
 
-        storeCustomerRepository.save(storeCustomer);
+        assertDoesNotThrow( ()-> {storeCustomerRepository.saveCustomer(storeCustomer);});
 
         assertThat(storeCustomer).isNotNull();
         log.info("Product after saving --> {}", storeCustomer);
     }
     @Test
+    void testThatWeCannotCreateAProductWithoutAnEmail(){
+        storeCustomer.setFname("Hannah");
+        storeCustomer.setLname("Oluwafemi");
+        storeCustomer.setContact("07098765432");
+        storeCustomer.setPassword("ifeoluwa1234");
+
+        assertThrows(CustomerException.class, ()->{
+            storeCustomerRepository.saveCustomer(storeCustomer);
+        });
+
+        assertThat(storeCustomer.getId()).isNull();
+    }
+    @Test
     void testThatWeCanDeleteAddress(){
-        AssertionsForClassTypes.assertThat(storeCustomerRepository.existsById(1)).isTrue();
-        storeCustomerRepository.deleteById(1);
-        AssertionsForClassTypes.assertThat(storeCustomerRepository.existsById(1)).isFalse();
+        AssertionsForClassTypes.assertThat(storeCustomerRepository.existsById(2)).isTrue();
+        storeCustomerRepository.deleteById(2);
+        AssertionsForClassTypes.assertThat(storeCustomerRepository.existsById(2)).isFalse();
     }
 
     @Test
@@ -114,7 +128,7 @@ class StoreCustomerRepositoryTest {
         log.info("customer --> {}", storeCustomer);
 
         assertThat(storeCustomer.getId()).isNotNull();
-        assertThat(storeCustomer.getAddressList()).isNotNull();
+        assertThat(storeCustomer.getAddresses()).isNotNull();
     }
 
     @Test
@@ -131,7 +145,7 @@ class StoreCustomerRepositoryTest {
 
         log.info("storeCustomer --> {}", storeCustomer);
 
-        assertThat(storeCustomer.getAddressList().size()).isEqualTo(2);
+        assertThat(storeCustomer.getAddresses().size()).isEqualTo(2);
 
     }
 
@@ -142,11 +156,11 @@ class StoreCustomerRepositoryTest {
         storeCustomer = storeCustomerRepository.findById(2).orElse(null);
 
         assert storeCustomer != null;
-        for(Address address : storeCustomer.getAddressList()){
+        for(Address address : storeCustomer.getAddresses()){
             log.info("All addresses -->{}", address);
         }
         assert storeCustomer != null;
-        assertThat(storeCustomer.getAddressList().size()).isEqualTo(1);
+        assertThat(storeCustomer.getAddresses().size()).isEqualTo(1);
     }
 
     @Test
@@ -157,9 +171,9 @@ class StoreCustomerRepositoryTest {
 
         Address address = addressRepository.findById(3).orElse(null);
 
-        if (storeCustomer.getAddressList().contains(address)) {
-            storeCustomer.getAddressList().remove(address);
+        if (storeCustomer.getAddresses().contains(address)) {
+            storeCustomer.getAddresses().remove(address);
         }
-        assertThat(storeCustomer.getAddressList().size()).isEqualTo(1);
+        assertThat(storeCustomer.getAddresses().size()).isEqualTo(1);
     }
 }

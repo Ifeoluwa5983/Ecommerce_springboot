@@ -23,4 +23,7 @@ public class Product {
 
     private String exp;
 
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders;
+
 }

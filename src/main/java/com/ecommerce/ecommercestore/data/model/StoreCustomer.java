@@ -29,19 +29,19 @@ public class StoreCustomer {
     @ToString.Exclude
     private Set<Card> cards;
 
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany
     @ToString.Exclude
-    private Set<Address> addressList;
+    private Set<Address> addresses;
 
     @OneToMany(mappedBy = "storeCustomer")
-    private Set<OrderModel> orderModels;
+    private Set<Order> orders;
 
     public void setAddress(Address address){
-        if(addressList == null){
-            addressList = new HashSet<>();
+        if(addresses == null){
+            addresses = new HashSet<>();
         }
         if(checkIfAddressDoesNotExist(address)) {
-            addressList.add(address);
+            addresses.add(address);
         }
     }
 
@@ -53,7 +53,7 @@ public class StoreCustomer {
     }
 
     private boolean checkIfAddressDoesNotExist(Address address){
-        if(!getAddressList().contains(address)){
+        if(!getAddresses().contains(address)){
             return true;
         }
         return false;
