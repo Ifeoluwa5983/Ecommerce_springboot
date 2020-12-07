@@ -74,6 +74,8 @@ class AddressControllerTest {
     }
     @Test
     void testUpdateAddressEndpoint() throws Exception {
+        address.setId(1);
+        address.setCity("Ipaja");
 
         this.mockMvc.perform(post("/address/update")
                 .contentType("application/json")

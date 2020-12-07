@@ -6,6 +6,7 @@ import com.ecommerce.ecommercestore.data.exception.CustomerException;
 import com.ecommerce.ecommercestore.data.model.StoreCustomer;
 import com.ecommerce.ecommercestore.data.repository.StoreCustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     StoreCustomerDTOMapper storeCustomerDTOMapper;
 
+    private String encryptPassword(String password){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.encode(password);
+    }
+
     @Override
-    public StoreCustomerDTO findByCustomerId(Integer id) {
-        StoreCustomer customer =  storeCustomerRepository.findById(id).get();
-        return storeCustomerDTOMapper.setCustomerToDTO(customer);
+    public StoreCustomer findByCustomerId(Integer id) {
+        StoreCustomer customer =  storeCustomerRepository.findById(id).orElse(null);
+        return customer;
     }
 
     @Override
@@ -47,6 +53,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
         if(customer.getPassword() != null){
             existingCustomer.setPassword(customer.getPassword());
+        }
+        if(customer.getFname() != null){
+            existingCustomer.setFname(customer.getFname());
+        }
+        if(customer.getLname() != null){
+            existingCustomer.setLname(customer.getLname());
         }
         if(customer.getContact() != null){
             existingCustomer.setContact(customer.getContact());

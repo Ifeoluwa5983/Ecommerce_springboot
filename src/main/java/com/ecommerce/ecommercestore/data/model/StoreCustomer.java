@@ -1,5 +1,6 @@
 package com.ecommerce.ecommercestore.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -27,10 +28,12 @@ public class StoreCustomer {
 
     @OneToMany(mappedBy = "storeCustomer")
     @ToString.Exclude
+    @JsonIgnore
     private Set<Card> cards;
 
     @ManyToMany
     @ToString.Exclude
+    @JsonIgnore
     private Set<Address> addresses;
 
     @OneToMany(mappedBy = "storeCustomer")

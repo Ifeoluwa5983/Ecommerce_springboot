@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-    public StoreCustomerDTO findByCustomerId(Integer id);
+    public StoreCustomer findByCustomerId(Integer id);
 
     public List<StoreCustomer> findAllCustomers();
 

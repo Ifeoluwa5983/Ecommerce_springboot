@@ -65,13 +65,17 @@ class CustomerControllerTest {
 
     @Test
     void testDeleteCustomerByIdEndpoint() throws Exception {
-        this.mockMvc.perform(delete("/customer/delete/2"))
+        this.mockMvc.perform(delete("/customer/delete/3"))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andReturn();
     }
+
     @Test
     void testUpdateCustomerEndpoint() throws Exception {
+
+        storeCustomer.setId(1);
+        storeCustomer.setFname("Bolu");
 
         this.mockMvc.perform(post("/customer/update")
                 .contentType("application/json")

@@ -15,4 +15,6 @@ public class StoreCustomerDTO {
     private String email;
 
     private String contact;
+
+    private String password;
 }

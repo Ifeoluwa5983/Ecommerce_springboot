@@ -1,5 +1,7 @@
 package com.ecommerce.ecommercestore.web.controllers.customer;
 
+import com.ecommerce.ecommercestore.data.DTO.StoreCustomerDTO;
+import com.ecommerce.ecommercestore.data.DTO.StoreCustomerDTOMapper;
 import com.ecommerce.ecommercestore.data.exception.CustomerException;
 import com.ecommerce.ecommercestore.data.model.StoreCustomer;
 import com.ecommerce.ecommercestore.service.customer.CustomerService;
@@ -18,6 +20,9 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+    @Autowired
+    StoreCustomerDTOMapper storeCustomerDTOMapper;
+
     @GetMapping("/all")
     public ResponseEntity<?>  getAllCustomers(){
        List<StoreCustomer> customers = customerService.findAllCustomers();
@@ -25,22 +30,22 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createCustomer(@RequestBody StoreCustomer customer){
+    public ResponseEntity<?> createCustomer(@RequestBody StoreCustomerDTO customerDTO){
         try{
-            customerService.createCustomer(customer);
+            customerService.createCustomer(storeCustomerDTOMapper.setCustomerDTOToCustomer(customerDTO));
         }catch (CustomerException exe){
             return ResponseEntity.badRequest().body(exe.getMessage());
         }
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+        return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
     }
     @PostMapping("/update")
-    public ResponseEntity<?> updateCustomer(@RequestBody StoreCustomer customer){
+    public ResponseEntity<?> updateCustomer(@RequestBody StoreCustomerDTO customerDTO){
         try{
-            customerService.updateCustomer(customer);
+            customerService.updateCustomer(storeCustomerDTOMapper.setCustomerDTOToCustomer(customerDTO));
         }catch (CustomerException exe){
             return ResponseEntity.badRequest().body(exe.getMessage());
         }
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+        return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCustomerById(@PathVariable Integer id){
@@ -54,12 +59,13 @@ public class CustomerController {
 
     @GetMapping("/one/{id}")
     public ResponseEntity<?> findCustomerById(@PathVariable Integer id){
+        StoreCustomer customer;
         try{
-            customerService.findByCustomerId(id);
+            customer = customerService.findByCustomerId(id);
         }catch (NullPointerException exe){
             return ResponseEntity.badRequest().body(exe.getMessage());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(storeCustomerDTOMapper.setCustomerToDTO(customer),HttpStatus.OK);
     }
 
 }
