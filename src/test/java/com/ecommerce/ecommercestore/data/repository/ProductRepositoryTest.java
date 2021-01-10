@@ -17,7 +17,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Slf4j
-@Sql(scripts = {"classpath:db/insert-db.sql"})
+//@Sql(scripts = {"classpath:db/insert-db.sql"})
 class ProductRepositoryTest {
 
         @Autowired
