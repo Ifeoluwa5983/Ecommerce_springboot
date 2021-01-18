@@ -3,11 +3,10 @@ package com.ecommerce.ecommercestore.data.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ecommerce.ecommercestore.data.model.ApplicationUser;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 
@@ -19,14 +18,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationToken {
+public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(Object principal, Object credentials, AuthenticationManager authenticationManager) {
-        super(principal, credentials);
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response){
         try {
             ApplicationUser credential = new ObjectMapper()
@@ -44,6 +44,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationToken
         }
     }
 
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication){
         String token = JWT.create()
